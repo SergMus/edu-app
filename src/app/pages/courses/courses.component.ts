@@ -23,6 +23,7 @@ export class CoursesComponent implements OnInit {
   public pageNumber?: number;
   public currentPreviewVideo?: Course;
   public video?: HTMLVideoElement;
+  public player: any;
 
   constructor(
     private httpCoursesService: HttpCoursesService,
@@ -58,7 +59,7 @@ export class CoursesComponent implements OnInit {
   }
 
   public stopPreviewVideo(): void {
-    this.video?.pause();
+    this.video?.load();
     this.currentPreviewVideo = undefined;
   }
 }

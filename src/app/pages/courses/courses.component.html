@@ -3,19 +3,13 @@
   <div class="courses-container">
     <mat-card *ngFor="let course of courses$ | async" class="course-card">
       <div class="video-container">
-        <img
-          mat-card-image
-          [src]="course.previewImageLink + '/cover.webp'"
-          alt="{{ course.title }}"
-          (mouseenter)="startPreviewVideo(course)"
-        />
-
         <video
           [id]="course.id"
           class="video"
           muted
-          *ngIf="currentPreviewVideo === course"
+          (mouseenter)="startPreviewVideo(course)"
           (mouseleave)="stopPreviewVideo()"
+          [poster]="course.previewImageLink + '/cover.webp'"
         >
           <source
             src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
