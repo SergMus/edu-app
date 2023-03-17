@@ -1,0 +1,54 @@
+<div class="main-wrapper">
+  <h1 class="title">Courses List</h1>
+  <div class="courses-container">
+    <mat-card *ngFor="let course of courses$ | async" class="course-card">
+      <div class="video-container">
+        <img
+          mat-card-image
+          [src]="course.previewImageLink + '/cover.webp'"
+          alt="{{ course.title }}"
+          (mouseenter)="startPreviewVideo(course)"
+        />
+
+        <video
+          [id]="course.id"
+          class="video"
+          muted
+          *ngIf="currentPreviewVideo === course"
+          (mouseleave)="stopPreviewVideo()"
+        >
+          <source
+            src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
+
+      <mat-card-title>{{ course.title }}</mat-card-title>
+      <mat-card-subtitle>
+        <span *ngFor="let skill of course.meta?.skills" class="skill">{{
+          skill
+        }}</span></mat-card-subtitle
+      >
+      <mat-card-content>
+        <p>{{ course.description }}</p>
+      </mat-card-content>
+      <mat-card-footer>
+        <div class="course-rating">
+          <span>Rating:</span> {{ course.rating }}
+        </div>
+        <span class="course-lessons">{{ course.lessonsCount }} lessons</span>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+  <div class="pagination">
+    <mat-paginator
+      *ngIf="courses$"
+      [length]="totalCourses$ | async"
+      [pageIndex]="pageNumber"
+      [pageSize]="pageSize"
+      (page)="onPageChanged($event)"
+    >
+    </mat-paginator>
+  </div>
+</div>
