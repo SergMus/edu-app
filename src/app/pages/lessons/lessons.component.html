@@ -1,0 +1,50 @@
+<div *ngIf="course$ | async as course" class="course-details">
+  <h2 class="course-title">Course: {{ course.title }}</h2>
+  <img
+    class="course-image"
+    [src]="course.previewImageLink + '/cover.webp'"
+    alt=""
+  />
+  <p class="course-description">{{ course.description }}</p>
+</div>
+
+<mat-card
+  *ngIf="currentLesson$ | async as currentLesson"
+  class="current-lesson"
+>
+  <div class="video-container">
+    <video [id]="currentLesson.id" controls></video>
+    <p class="lesson-title">
+      lesson {{ currentLesson.order }}: <span>{{ currentLesson.title }}</span>
+    </p>
+  </div>
+</mat-card>
+
+<div *ngIf="lessons$ | async as lessons" class="lessons-list">
+  <div class="nav-list">
+    <div
+      class="list-item"
+      *ngFor="let lesson of lessons"
+      [routerLink]="['/lessons', lesson.id]"
+      (click)="onLessonClick(lesson)"
+    >
+      <p class="list-text">
+        <span>{{ lesson.order }}. </span>{{ lesson.title }}
+      </p>
+      <p
+        class="status"
+        [ngClass]="{
+          forbidden: lesson.status === 'locked',
+          allowed: lesson.status === 'unlocked'
+        }"
+      >
+        {{ lesson.status }}
+      </p>
+      <img
+        mat-list-avatar
+        [src]="lesson.previewImageLink + '/lesson-' + lesson.order + '.webp'"
+        alt=""
+      />
+    </div>
+  </div>
+</div>

@@ -11,6 +11,7 @@ import {
   throwError,
 } from 'rxjs';
 import { Course, Courses } from '../models/courses.interface';
+import { CourseLessons } from '../models/lessons.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -37,10 +38,10 @@ export class HttpCoursesService {
     );
   }
 
-  public getCourseById(courseId: number): Observable<Course> {
-    const url = `${this.apiUrl}/core/preview-courses/:${courseId}`;
+  public getCourseById(courseId: string): Observable<CourseLessons> {
+    const url = `${this.apiUrl}/core/preview-courses/${courseId}`;
 
-    return this.http.get<Course>(url).pipe(catchError(this.handleError));
+    return this.http.get<CourseLessons>(url).pipe(catchError(this.handleError));
   }
 
   public handleError(error: HttpErrorResponse): Observable<never> {

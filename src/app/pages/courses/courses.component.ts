@@ -1,15 +1,11 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable, Subject } from 'rxjs';
+import Hls from 'hls.js';
 
 import { Course } from 'src/app/core/models/courses.interface';
 import { HttpCoursesService } from 'src/app/core/services/http-courses.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-courses',
@@ -23,10 +19,12 @@ export class CoursesComponent implements OnInit {
   public pageNumber?: number;
   public currentPreviewVideo?: Course;
   public video?: HTMLVideoElement;
+  public hls: any;
 
   constructor(
     private httpCoursesService: HttpCoursesService,
-    public cd: ChangeDetectorRef
+    public cd: ChangeDetectorRef,
+    public router: Router
   ) {}
 
   public ngOnInit(): void {
@@ -54,11 +52,26 @@ export class CoursesComponent implements OnInit {
     this.video = document.getElementById(
       course.id.toString()
     ) as HTMLVideoElement;
-    this.video?.play();
+
+    if (Hls.isSupported()) {
+      this.hls = new Hls();
+      this.hls.loadSource(course.meta?.courseVideoPreview?.link);
+      this.hls.attachMedia(this.video);
+      this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        this.video?.play();
+        this.video!.muted = true;
+      });
+    } else if (this.video.canPlayType('application/vnd.apple.mpegurl')) {
+      this.video.src = course.meta!.courseVideoPreview.link;
+      this.video.addEventListener('loadedmetadata', () => {
+        this.video?.play();
+        this.video!.muted = true;
+      });
+    }
   }
 
   public stopPreviewVideo(): void {
-    this.video?.pause();
+    this.video?.load();
     this.currentPreviewVideo = undefined;
   }
 }
