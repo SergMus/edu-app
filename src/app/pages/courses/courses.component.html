@@ -2,23 +2,19 @@
   <h1 class="title">Courses List</h1>
   <div class="courses-container">
     <mat-card *ngFor="let course of courses$ | async" class="course-card">
-      <div class="video-container">
-        <video
-          [id]="course.id"
-          class="video"
-          muted
-          (mouseenter)="startPreviewVideo(course)"
-          (mouseleave)="stopPreviewVideo()"
-          [poster]="course.previewImageLink + '/cover.webp'"
-        >
-          <source
-            src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            type="video/mp4"
-          />
-        </video>
-      </div>
+      <video
+        [id]="course.id"
+        class="video"
+        (mouseenter)="startPreviewVideo(course)"
+        (mouseleave)="stopPreviewVideo()"
+        [poster]="course.previewImageLink + '/cover.webp'"
+      >
+        <source />
+      </video>
 
-      <mat-card-title>{{ course.title }}</mat-card-title>
+      <mat-card-title [routerLink]="['/lessons', course.id]">{{
+        course.title
+      }}</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let skill of course.meta?.skills" class="skill">{{
           skill
