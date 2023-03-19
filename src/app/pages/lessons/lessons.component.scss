@@ -97,5 +97,9 @@
         color: green;
       }
     }
+
+    .disabled {
+      pointer-events: none;
+    }
   }
 }

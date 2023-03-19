@@ -17,7 +17,6 @@ export class CoursesComponent implements OnInit {
   public totalCourses$?: Subject<number>;
   public pageSize: number = 10;
   public pageNumber?: number;
-  public currentPreviewVideo?: Course;
   public video?: HTMLVideoElement;
   public hls: any;
 
@@ -45,13 +44,10 @@ export class CoursesComponent implements OnInit {
     this.getCourses();
   }
 
-  public startPreviewVideo(course: Course): void {
-    this.currentPreviewVideo = course;
+  public startPreviewVideo(course: Course, event: MouseEvent): void {
     this.cd.detectChanges();
 
-    this.video = document.getElementById(
-      course.id.toString()
-    ) as HTMLVideoElement;
+    this.video = event.target as HTMLVideoElement;
 
     if (Hls.isSupported()) {
       this.hls = new Hls();
@@ -72,6 +68,5 @@ export class CoursesComponent implements OnInit {
 
   public stopPreviewVideo(): void {
     this.video?.load();
-    this.currentPreviewVideo = undefined;
   }
 }

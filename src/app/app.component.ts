@@ -6,12 +6,6 @@ import { AuthService } from './core/services/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'courses';
-
-  constructor(private authHttpService: AuthService) {}
-
-  public ngOnInit(): void {
-    this.authHttpService.getAuthToken().subscribe();
-  }
 }

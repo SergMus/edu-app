@@ -3,9 +3,11 @@
   <div class="courses-container">
     <mat-card *ngFor="let course of courses$ | async" class="course-card">
       <video
-        [id]="course.id"
         class="video"
-        (mouseenter)="startPreviewVideo(course)"
+        muted="true"
+        autoplay
+        playsInline
+        (mouseenter)="startPreviewVideo(course, $event)"
         (mouseleave)="stopPreviewVideo()"
         [poster]="course.previewImageLink + '/cover.webp'"
       >
