@@ -2,8 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -18,12 +20,13 @@ import Hls from 'hls.js';
   styleUrls: ['./lessons.component.scss'],
 })
 export class LessonsComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('video') video?: ElementRef;
   public course$?: Observable<CourseLessons>;
   public lessons$?: Observable<Lesson[]>;
   public currentLesson$?: Observable<Lesson>;
   public currentLesson?: Subscription;
   public routeParam?: string;
-  public video?: HTMLVideoElement;
+  public playbackRate?: number;
   public hls: any;
 
   constructor(
@@ -51,30 +54,38 @@ export class LessonsComponent implements OnInit, AfterViewInit, OnDestroy {
       map((course) => course.lessons.find((l) => l.id === lesson.id)),
       filter((lesson): lesson is Lesson => !!lesson)
     );
+    this.startVideo(lesson);
   }
 
   public startVideo(lesson: Lesson): void {
     this.cd.detectChanges();
-
-    this.video = document.getElementById(
-      lesson.id.toString()
-    ) as HTMLVideoElement;
+    const video = this.video?.nativeElement;
 
     if (Hls.isSupported()) {
       this.hls = new Hls();
       this.hls.loadSource(lesson.link);
-      this.hls.attachMedia(this.video);
+      this.hls.attachMedia(video);
       this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        this.video?.play();
-        this.video!.muted = true;
+        video.play();
+        video.muted = true;
+        this.playbackRate = video.playbackRate;
+        this.updatePlaybackRate(video);
       });
-    } else if (this.video.canPlayType('application/vnd.apple.mpegurl')) {
-      this.video.src = lesson.link;
-      this.video.addEventListener('loadedmetadata', () => {
-        this.video?.play();
-        this.video!.muted = true;
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = lesson.link;
+      video.addEventListener('loadedmetadata', () => {
+        video.play();
+        video.muted = true;
+        this.playbackRate = video.playbackRate;
       });
+      this.updatePlaybackRate(video);
     }
+  }
+
+  public updatePlaybackRate(video: HTMLVideoElement): void {
+    video.addEventListener('ratechange', () => {
+      this.playbackRate = video.playbackRate;
+    });
   }
 
   public ngAfterViewInit(): void {

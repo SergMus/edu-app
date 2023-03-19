@@ -13,10 +13,20 @@
   class="current-lesson"
 >
   <div class="video-container">
-    <video [id]="currentLesson.id" controls></video>
+    <video
+      #video
+      controls
+      autoplay
+      playsInline
+      playbackRateControl="playbackRate"
+    ></video>
     <p class="lesson-title">
       lesson {{ currentLesson.order }}: <span>{{ currentLesson.title }}</span>
     </p>
+    <span
+      >CTRL+&#11014; to speed up Video, CTRL+&#11015; to slow down Video</span
+    >
+    <h4>Playback rate: {{ playbackRate }}</h4>
   </div>
 </mat-card>
 
@@ -25,7 +35,7 @@
     <div
       class="list-item"
       *ngFor="let lesson of lessons"
-      [routerLink]="['/lessons', lesson.id]"
+      [ngClass]="{ disabled: lesson.status === 'locked' }"
       (click)="onLessonClick(lesson)"
     >
       <p class="list-text">

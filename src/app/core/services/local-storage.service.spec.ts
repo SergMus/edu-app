@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LocalStorageService } from './localstorage.service';
+import { LocalStorageService } from './local-storage.service';
 
-describe('TokenService', () => {
+describe('LocalStorageProgressService', () => {
   let service: LocalStorageService;
 
   beforeEach(() => {
