@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Observable, Subject } from 'rxjs';
 import Hls from 'hls.js';
@@ -11,6 +16,7 @@ import { Router } from '@angular/router';
   selector: 'app-courses',
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoursesComponent implements OnInit {
   public courses$?: Observable<Course[]>;

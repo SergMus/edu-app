@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -18,6 +19,7 @@ import Hls from 'hls.js';
   selector: 'app-lessons',
   templateUrl: './lessons.component.html',
   styleUrls: ['./lessons.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LessonsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('video') video?: ElementRef;
