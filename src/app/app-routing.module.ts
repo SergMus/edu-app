@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'courses',
-    component: CoursesComponent,
+    loadChildren:()=>import('./pages/courses/courses.module').then(m=>m.CoursesModule),
     canActivate: [AuthGuard],
   },
   {
