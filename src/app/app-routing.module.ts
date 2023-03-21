@@ -21,6 +21,11 @@ const routes: Routes = [
         (m) => m.LessonsModule
       ),
   },
+  {
+    path: '**',
+    loadChildren: () =>
+      import('./../app/pages/login/login.module').then((m) => m.LoginModule),
+  },
 ];
 
 @NgModule({

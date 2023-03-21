@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, concatMap, of, catchError } from 'rxjs';
-import { TokenService } from './token.service';
+import { Observable, of, catchError, map } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,17 +12,17 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private tokenService: TokenService,
+    private localStorageService: LocalStorageService,
     private router: Router
   ) {}
 
-  public getAuthToken(): Observable<boolean | null> {
+  public isAuthenticated(): Observable<boolean> {
     return this.http
       .get(`${this.apiUrl}/auth/anonymous?platform=subscriptions`)
       .pipe(
-        concatMap((token: any) => {
-          this.tokenService.setToken(token.token);
-          return of(null);
+        map((token: any) => {
+          this.localStorageService.setItem('token', token.token);
+          return true;
         }),
         catchError(() => {
           this.router.navigate(['/login']);
